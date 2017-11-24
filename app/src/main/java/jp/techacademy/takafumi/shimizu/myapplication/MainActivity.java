@@ -17,7 +17,7 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Cursor cursor=null ;
+    Cursor cursor = null;
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
 
@@ -62,14 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.button1) {
-            getContentsInfo();
-        }
-    }
     private void getContentsInfo() {
 
         // 画像の情報を取得する
@@ -80,22 +72,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 null, // フィルタ条件(null = フィルタなし)
                 null, // フィルタ用パラメータ
                 null // ソート (null ソートなし)
+
+
         );
-        getInfo();
-    }
 
+        cursor.moveToFirst();}
 
-        private void getInfo(){
+         @Override
+         public void onClick(View v) {
+        if(cursor.moveToNext()){
 
-        if (cursor.moveToNext()) {
+        if(v.getId() == R.id.button1){
+
             int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
             Long id = cursor.getLong(fieldIndex);
             Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
             ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
             imageVIew.setImageURI(imageUri);
+
+            cursor.moveToNext();
         }
         cursor.close();
     }
-
+  }
 }
