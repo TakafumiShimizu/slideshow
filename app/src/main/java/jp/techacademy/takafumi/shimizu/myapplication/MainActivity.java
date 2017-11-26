@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button button1 = (Button) findViewById(R.id.button1);
         button1.setOnClickListener(this);
 
-        Button button2 = (Button) findViewById(R.id.button2);
+        Button button2 = (Button) findViewById(R.id.button1);
         button1.setOnClickListener(this);
 
 
@@ -62,38 +62,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
     private void getContentsInfo() {
+
 
         // 画像の情報を取得する
         ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(
+        cursor = resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
                 null, // 項目(null = 全項目)
                 null, // フィルタ条件(null = フィルタなし)
                 null, // フィルタ用パラメータ
                 null // ソート (null ソートなし)
-
-
         );
 
-        cursor.moveToFirst();}
 
-         @Override
-         public void onClick(View v) {
-        if(cursor.moveToNext()){
 
-        if(v.getId() == R.id.button1){
-
-            int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-            Long id = cursor.getLong(fieldIndex);
-            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-
-            ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
-            imageVIew.setImageURI(imageUri);
-
-            cursor.moveToNext();
-        }
-        cursor.close();
     }
-  }
+    @Override
+    public void onClick(View v) {
+
+        if (v.getId() == R.id.button1) {
+            if (cursor.moveToFirst()) {
+                int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+                Long id = cursor.getLong(fieldIndex);
+                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+                ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
+                imageVIew.setImageURI(imageUri);
+
+            }
+
+        } cursor.close();
+
+    }
 }
+
