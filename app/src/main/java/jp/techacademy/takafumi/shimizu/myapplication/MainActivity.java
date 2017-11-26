@@ -10,14 +10,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import java.util.Timer;
+import java.util.TimerTask;
+import android.os.Handler;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Cursor cursor = null;
+    Cursor cursor ;
+    Timer mTimer;
+    Handler mHandler = new Handler();
+    double mTimerSec = 0.0;
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
 
@@ -31,7 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button1.setOnClickListener(this);
 
         Button button2 = (Button) findViewById(R.id.button2);
-        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+
+        Button button3 = (Button) findViewById(R.id.button3);
+        button3.setOnClickListener(this);
 
 
         // Android 6.0以降の場合
@@ -66,34 +75,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getContentsInfo() {
 
+        if (cursor == null) {
+            // 画像の情報を取得する
+            ContentResolver resolver = getContentResolver();
+            cursor = resolver.query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
+                    null, // 項目(null = 全項目)
+                    null, // フィルタ条件(null = フィルタなし)
+                    null, // フィルタ用パラメータ
+                    null // ソート (null ソートなし)
+            );
 
-        // 画像の情報を取得する
-        ContentResolver resolver = getContentResolver();
-        cursor = resolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
-                null, // 項目(null = 全項目)
-                null, // フィルタ条件(null = フィルタなし)
-                null, // フィルタ用パラメータ
-                null // ソート (null ソートなし)
-        );
             cursor.moveToFirst();
-
+        }
     }
+
+
+
+    private void timesCount() {
+        // タイマーの作成
+        mTimer = new Timer();
+        // タイマーの始動
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        cursor.moveToNext();
+                       showCursorImage();
+                    }
+                });
+            }
+        }, 2000, 2000);
+    }
+
+
+
 
     @Override
     public void onClick(View v) {
             if (v.getId() == R.id.button1) {
 
 
-                if(cursor.isLast()) getContentsInfo();
+                if(cursor.isLast()) cursor.moveToFirst();
 
                 cursor.moveToNext();
 
             }else if(v.getId() == R.id.button2){
 
-                if(cursor.isFirst()) getContentsInfo();
+                if(cursor.isFirst()) cursor.moveToLast();
 
                 cursor.moveToPrevious();
+            }else if(v.getId() == R.id.button3){
+                timesCount();
             }
 
             showCursorImage();
