@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 null, // フィルタ用パラメータ
                 null // ソート (null ソートなし)
         );
-        cursor.moveToFirst();
+            cursor.moveToFirst();
 
     }
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (v.getId() == R.id.button1) {
 
 
-            if(cursor.isLast()) getContentsInfo();
+                if(cursor.isLast()) getContentsInfo();
 
                 cursor.moveToNext();
 
