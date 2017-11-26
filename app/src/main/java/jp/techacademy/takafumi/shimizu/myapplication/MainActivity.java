@@ -77,13 +77,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
 
 
+        cursor.moveToFirst();
+
 
     }
     @Override
     public void onClick(View v) {
 
         if (v.getId() == R.id.button1) {
-            if (cursor.moveToFirst()) {
+
                 int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
                 Long id = cursor.getLong(fieldIndex);
                 Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
@@ -93,7 +95,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
 
-        } cursor.close();
+        }
+
+
+        @Override protected void onDestroy() {
+        super.onDestroy();
+        cursor.close();
 
     }
 }
