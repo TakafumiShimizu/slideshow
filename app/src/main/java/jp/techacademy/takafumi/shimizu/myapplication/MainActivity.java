@@ -26,10 +26,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         Button button1 = (Button) findViewById(R.id.button1);
         button1.setOnClickListener(this);
 
-        Button button2 = (Button) findViewById(R.id.button1);
+        Button button2 = (Button) findViewById(R.id.button2);
         button1.setOnClickListener(this);
 
 
@@ -75,33 +76,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 null, // フィルタ用パラメータ
                 null // ソート (null ソートなし)
         );
-
-
         cursor.moveToFirst();
 
-
     }
+
     @Override
     public void onClick(View v) {
+            if (v.getId() == R.id.button1) {
 
-        if (v.getId() == R.id.button1) {
 
-                int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-                Long id = cursor.getLong(fieldIndex);
-                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            if(cursor.isLast()) getContentsInfo();
 
-                ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
-                imageVIew.setImageURI(imageUri);
+                cursor.moveToNext();
 
+            }else if(v.getId() == R.id.button2){
+
+                if(cursor.isFirst()) getContentsInfo();
+
+                cursor.moveToPrevious();
             }
 
-        }
-
-
-        @Override protected void onDestroy() {
-        super.onDestroy();
-        cursor.close();
-
+            showCursorImage();
     }
-}
+
+
+
+
+
+
+
+
+    private void showCursorImage(){
+        int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+        Long id = cursor.getLong(fieldIndex);
+        Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+        ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
+        imageVIew.setImageURI(imageUri);
+    }
+
+
+        @Override protected void onDestroy(){
+            super.onDestroy();
+            cursor.close();
+        }
+    }
+
+
 
