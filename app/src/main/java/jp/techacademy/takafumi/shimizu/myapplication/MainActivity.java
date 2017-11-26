@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Cursor cursor ;
     Timer mTimer;
     Handler mHandler = new Handler();
-    double mTimerSec = 0.0;
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
 
@@ -34,12 +33,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         Button button1 = (Button) findViewById(R.id.button1);
-        button1.setOnClickListener(this);
-
-        Button button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(this);
-
+        Button button2 = (Button) findViewById(R.id.button1);
         Button button3 = (Button) findViewById(R.id.button3);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
         button3.setOnClickListener(this);
 
 
@@ -104,8 +101,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void run() {
 
+                        if(cursor.isLast()) cursor.moveToFirst();
                         cursor.moveToNext();
-                       showCursorImage();
+                        showCursorImage();
+
                     }
                 });
             }
@@ -117,23 +116,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+
             if (v.getId() == R.id.button1) {
 
-
                 if(cursor.isLast()) cursor.moveToFirst();
-
                 cursor.moveToNext();
+                showCursorImage();
 
             }else if(v.getId() == R.id.button2){
-
                 if(cursor.isFirst()) cursor.moveToLast();
-
                 cursor.moveToPrevious();
+                showCursorImage();
+
             }else if(v.getId() == R.id.button3){
                 timesCount();
+                button1.setEnabled(false);
+                button2.setEnabled(false);
+
+
             }
 
-            showCursorImage();
+
     }
 
 
